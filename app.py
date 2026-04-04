@@ -1,35 +1,67 @@
 import streamlit as st
 
-# Configuración de página con estética oscura y limpia
-st.set_page_config(page_title="APOLO X", page_icon="🔘")
+# Configuración de página limpia
+st.set_page_config(page_title="APOLO X", page_icon="⚪️")
 
-# CSS para inyectar el estilo "Dark Elegant"
+# CSS para estética Blanca/Instagram
 st.markdown("""
     <style>
-    .stApp { background-color: #0E1117; color: #FFFFFF; }
-    .stChatInput { border-radius: 20px; }
-    .stChatMessage { border-radius: 10px; border: 1px solid #30363d; }
-    h1 { font-family: 'Segoe UI', sans-serif; letter-spacing: -1px; }
+    /* Fondo blanco total */
+    .stApp { background-color: #ffffff; color: #000000; }
+    
+    /* Ajuste de burbujas (sin iconos de robots/personas) */
+    [data-testid="stChatMessage"] {
+        background-color: #f0f2f5; 
+        border-radius: 20px; 
+        padding: 15px;
+        margin-bottom: 10px;
+        border: none;
+    }
+    
+    /* El nombre del rol oculto para que parezca chat puro */
+    [data-testid="stChatMessage"] h2 { display: none; }
+    
+    /* Cuadro de texto abajo */
+    .stChatInputContainer { padding-bottom: 20px; }
+    
+    /* Título minimalista */
+    .main-title {
+        font-family: 'Helvetica Neue', sans-serif;
+        font-weight: 200;
+        text-align: center;
+        letter-spacing: 2px;
+        color: #000000;
+        margin-bottom: 30px;
+    }
     </style>
+    <h1 class="main-title">APOLO X</h1>
     """, unsafe_allow_html=True)
 
-st.title("APOLO X")
-st.write("---") # Una línea sutil para separar
-
-# El historial de mensajes (Memoria de la sesión)
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Mostrar mensajes
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Cuadro de entrada tipo GPT
-if prompt := st.chat_input("Escribe tu comando para APOLO X..."):
+# --- LÓGICA DE CHAT (Para que responda) ---
+if prompt := st.chat_input("Escribe un mensaje..."):
+    # Tu mensaje
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Respuesta simulada mientras conectamos el cerebro
+    # Respuesta de APOLO X
+    # Por ahora es una respuesta automática lógica, pronto le pondremos la API
     with st.chat_message("assistant"):
-        st.markdown("Sistemas operativos de APOLO X v1.0 en línea. Esperando integración de lenguaje.")
+        if "hola" in prompt.lower():
+            respuesta = "Hola. ¿En qué puedo ayudarte hoy?"
+        elif "quien eres" in prompt.lower():
+            respuesta = "Soy APOLO X, tu asistente personal."
+        else:
+            respuesta = f"He recibido tu mensaje: '{prompt}'. Estoy procesando la integración con mi base de datos."
+        
+        st.markdown(respuesta)
+    
+    st.session_state.messages.append({"role": "assistant", "content": respuesta})
