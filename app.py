@@ -5,41 +5,32 @@ st.set_page_config(page_title="APOLO X", layout="wide", initial_sidebar_state="c
 st.markdown(
     """
     <style>
-    /* =========================
-       BASE
-    ========================= */
-    html, body, [data-testid="stAppViewContainer"], .stApp {
+    html, body, .stApp {
         background: #ffffff !important;
     }
 
-    #MainMenu, footer, [data-testid="stHeader"], [data-testid="stToolbar"] {
+    #MainMenu, footer, header {
         visibility: hidden !important;
         height: 0 !important;
         min-height: 0 !important;
     }
 
     .block-container {
-        padding-top: 1rem !important;
-        padding-bottom: 6rem !important;
         max-width: 1100px !important;
+        padding-top: 1rem !important;
+        padding-bottom: 5rem !important;
     }
 
-    /* =========================
-       LOGO
-    ========================= */
-    .apolo-logo-wrap {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin: 0.2rem 0 1rem 0;
+    .apolo-logo {
+        text-align: center;
+        margin: 0.25rem 0 1rem 0;
         line-height: 1;
         user-select: none;
     }
 
-    .apolo-logo-main {
+    .apolo-logo .main {
         font-family: sans-serif;
-        font-weight: 800;
+        font-weight: 900;
         font-size: 2.2rem;
         letter-spacing: 0.22em;
         color: #000000;
@@ -47,45 +38,26 @@ st.markdown(
         padding: 0;
     }
 
-    .apolo-logo-sub {
+    .apolo-logo .sub {
         font-family: serif;
         font-style: italic;
         font-size: 1.35rem;
         font-weight: 400;
         color: #000000;
-        margin: -0.1rem 0 0 0;
+        margin: -0.15rem 0 0 0;
         padding: 0;
     }
 
-    /* =========================
-       CHAT MESSAGES
-       - user: izquierda, gris claro, negrita
-       - assistant: derecha, blanco con borde fino, normal
-    ========================= */
-    div[data-testid="stChatMessage"] {
+    [data-testid="stChatMessage"] {
         width: 100%;
         display: flex;
-        align-items: flex-start;
-        gap: 0.5rem;
         margin: 0.35rem 0;
+        align-items: flex-start;
     }
 
-    /* User on the LEFT */
-    div[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
-        flex-direction: row;
-        justify-content: flex-start;
-    }
-
-    /* Assistant on the RIGHT */
-    div[data-testid="stChatMessage"]:not(:has([data-testid="stChatMessageAvatarUser"])) {
-        flex-direction: row-reverse;
-        justify-content: flex-end;
-    }
-
-    /* Kill avatars / circles completely */
-    div[data-testid="stChatMessage"] > div:first-child,
-    div[data-testid="stChatMessageAvatarUser"],
-    div[data-testid="stChatMessageAvatarAssistant"] {
+    [data-testid="stChatMessage"] > div:first-child,
+    [data-testid="stChatMessageAvatarUser"],
+    [data-testid="stChatMessageAvatarAssistant"] {
         display: none !important;
         width: 0 !important;
         min-width: 0 !important;
@@ -95,75 +67,71 @@ st.markdown(
         overflow: hidden !important;
     }
 
-    /* Bubble base */
-    div[data-testid="stChatMessageContent"] {
-        width: fit-content !important;
-        max-width: min(78%, 72ch) !important;
+    [data-testid="stChatMessageContent"] {
+        padding: 0.8rem 1rem !important;
         border-radius: 999px !important;
-        padding: 0.85rem 1.05rem !important;
-        box-shadow: none !important;
+        max-width: min(78%, 72ch) !important;
+        width: fit-content !important;
         overflow-wrap: anywhere !important;
         word-break: break-word !important;
+        box-shadow: none !important;
     }
 
-    /* User bubble */
-    div[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) div[data-testid="stChatMessageContent"] {
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
+        justify-content: flex-start;
+    }
+
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
         background: #f2f2f2 !important;
         border: 1px solid #f2f2f2 !important;
         color: #000000 !important;
-        margin-right: auto !important;
-        margin-left: 0 !important;
-        text-align: left !important;
         font-weight: 800 !important;
+        text-align: center !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
-    /* Assistant bubble */
-    div[data-testid="stChatMessage"]:not(:has([data-testid="stChatMessageAvatarUser"])) div[data-testid="stChatMessageContent"] {
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] p {
+        margin: 0 !important;
+        width: 100% !important;
+        color: inherit !important;
+        font-weight: inherit !important;
+    }
+
+    [data-testid="stChatMessage"]:not(:has([data-testid="stChatMessageAvatarUser"])) {
+        justify-content: flex-end;
+    }
+
+    [data-testid="stChatMessage"]:not(:has([data-testid="stChatMessageAvatarUser"])) [data-testid="stChatMessageContent"] {
         background: #ffffff !important;
         border: 1px solid #dddddd !important;
         color: #000000 !important;
-        margin-left: auto !important;
-        margin-right: 0 !important;
-        text-align: left !important;
         font-weight: 400 !important;
+        text-align: center !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
-    /* Normalize text spacing */
-    div[data-testid="stChatMessageContent"] p,
-    div[data-testid="stChatMessageContent"] ul,
-    div[data-testid="stChatMessageContent"] ol {
+    [data-testid="stChatMessage"]:not(:has([data-testid="stChatMessageAvatarUser"])) [data-testid="stChatMessageContent"] p {
         margin: 0 !important;
+        width: 100% !important;
         color: inherit !important;
+        font-weight: inherit !important;
     }
 
-    div[data-testid="stChatMessageContent"] * {
-        color: inherit !important;
-    }
-
-    /* Make user text strong inside bubble */
-    div[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) div[data-testid="stChatMessageContent"] * {
-        font-weight: 800 !important;
-    }
-
-    /* Assistant normal weight */
-    div[data-testid="stChatMessage"]:not(:has([data-testid="stChatMessageAvatarUser"])) div[data-testid="stChatMessageContent"] * {
-        font-weight: 400 !important;
-    }
-
-    /* =========================
-       CHAT INPUT
-       One clean oval, no stacked rectangles
-    ========================= */
     [data-testid="stChatInput"] {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
     }
 
-    /* Outer wrappers that often create the ugly layered look */
-    div[data-testid="stChatInput"] > div,
-    div[data-testid="stChatInput"] > div > div,
-    div[data-testid="stChatInput"] div[data-baseweb="textarea"] {
+    [data-testid="stChatInput"] > div,
+    [data-testid="stChatInput"] > div > div,
+    [data-testid="stChatInput"] [data-baseweb="textarea"] {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -171,13 +139,13 @@ st.markdown(
 
     textarea[data-testid="stChatInputTextArea"] {
         background: #ffffff !important;
-        border: 1px solid #e1e1e1 !important;
+        border: 1px solid #dddddd !important;
         border-radius: 999px !important;
         box-shadow: none !important;
         outline: none !important;
         resize: none !important;
         min-height: 54px !important;
-        padding: 0.95rem 1.15rem !important;
+        padding: 0.9rem 1.1rem !important;
         color: #000000 !important;
     }
 
@@ -186,15 +154,13 @@ st.markdown(
     }
 
     textarea[data-testid="stChatInputTextArea"]:focus {
-        border: 1px solid #cfcfcf !important;
+        border: 1px solid #cccccc !important;
         box-shadow: none !important;
         outline: none !important;
     }
 
     button[data-testid="stChatInputSubmitButton"] {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
+        display: none !important;
     }
     </style>
     """,
@@ -203,9 +169,9 @@ st.markdown(
 
 st.markdown(
     """
-    <div class="apolo-logo-wrap">
-        <div class="apolo-logo-main">APOLO</div>
-        <div class="apolo-logo-sub">X</div>
+    <div class="apolo-logo">
+        <div class="main">APOLO</div>
+        <div class="sub">X</div>
     </div>
     """,
     unsafe_allow_html=True,
@@ -213,21 +179,16 @@ st.markdown(
 
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Hola. Escribe algo y mira si esta interfaz deja de pelearse contigo."}
+        {"role": "assistant", "content": "Hola."}
     ]
 
-# Render history
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# Input
-prompt = st.chat_input("Escribe aquí...")
+prompt = st.chat_input("Escribe algo...")
+
 if prompt:
     st.session_state.messages.append({"role": "user", "content": prompt})
-
-    # Demo response; reemplázalo por tu lógica real
-    response = f"Recibido: {prompt}"
-    st.session_state.messages.append({"role": "assistant", "content": response})
-
-    st.rerun() 
+    st.session_state.messages.append({"role": "assistant", "content": "Estoy aquí."})
+    st.rerun()
